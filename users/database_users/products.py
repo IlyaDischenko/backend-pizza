@@ -16,10 +16,9 @@ pizzas = Table('pizzas', meta,
 
 
 def get_pizzas():
-    # Проверка кода введённого пользователем
-    sel = select([pizzas.c.id, pizzas.c.title, pizzas.c.description, pizzas.c.photo, pizzas.c.price_small, pizzas.c.price_middle, pizzas.c.price_big]).where(pizzas.c.is_view == True)
+    # Берём пиццы из базы и возвращаем пользователю
+    sel = select([pizzas.c.id, pizzas.c.title, pizzas.c.description, pizzas.c.category, pizzas.c.photo, pizzas.c.price_small, pizzas.c.price_middle, pizzas.c.price_big]).where(pizzas.c.is_view == True)
     res = conn.execute(sel).fetchall()
-    print(res)
     return res
 
 
