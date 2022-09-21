@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from users.database_users.db_users import check_code, exists_user_or_add, add_email, add_name, add_address, update_last_active
 from users.database_users.model_users import Token, Number, Code, Email, Name, Address
@@ -7,6 +8,18 @@ from users.singin.call import call_service
 from users.singin.jwt_handler import getJWT, middleware, check_refresh
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/get")
 def get_pizza():
