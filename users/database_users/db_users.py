@@ -18,7 +18,6 @@ users = Table('Users', meta,
               Column('apartment', String(50))
               )
 
-
 last_active = Table('last_active', meta,
                     Column('id', Integer(), primary_key=True),
                     Column('id_user', Integer()),
@@ -141,8 +140,8 @@ def add_address(id, street, house, entrance, floor, apartment):
         return False
 
 
-
-
-engine = create_engine("postgresql+psycopg2://postgres:root@localhost:5432/test2", echo=False, pool_size=6)
+engine = create_engine(
+    "postgres://yeikikepummkph:efe3f9c86b97c3fc4d42b6698b594d83df58ac07579548e12e3cd543557c86d2@ec2-54-155-110-181.eu-west-1.compute.amazonaws.com:5432/dbk7asg84aedin",
+    echo=False, pool_size=6)
 meta.create_all(engine)
 conn = engine.connect()
