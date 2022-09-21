@@ -110,6 +110,6 @@ def set_address(data: Address):
     except:
         return {"status": "error"}
 
-@app.get("")
+@app.get("/yoyo")
 def main():
     return {"status": "okey"}
