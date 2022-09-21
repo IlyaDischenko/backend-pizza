@@ -109,3 +109,7 @@ def set_address(data: Address):
             return {"status": "Not valid token"}
     except:
         return {"status": "error"}
+
+@app.get("/")
+def main():
+    return {"status": "okey"}
