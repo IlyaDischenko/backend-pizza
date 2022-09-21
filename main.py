@@ -126,3 +126,7 @@ def set_address(data: Address):
 @app.get("/yoyo")
 def main():
     return {"status": "okey"}
+
+@app.get("/damir")
+def main():
+    return {"status": "damir dolboyob"}
