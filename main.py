@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from users.database_users.db_users import check_code, exists_user_or_add, add_email, add_name, add_address, update_last_active
 from users.database_users.model_users import Token, Number, Code, Email, Name, Address
-from users.database_users.products import get_pizzas
+from users.database_users.products import get_pizzas, get_drinks
 from users.singin.call import call_service
 from users.singin.jwt_handler import getJWT, middleware, check_refresh
 
@@ -25,8 +25,10 @@ app.add_middleware(
 
 @app.get("/get")
 def get_pizza():
-    res = get_pizzas()
-    return {"pizza": res}
+    res_pizzas = get_pizzas()
+    res_drinks = get_drinks()
+    return {"pizza": res_pizzas,
+            "drinks": res_drinks}
 
 
 @app.post("/api/gettoken")
