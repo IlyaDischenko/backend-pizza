@@ -1,4 +1,6 @@
 import time
+from decouple import config
+db_connect = config('database-connect-addres')
 
 from sqlalchemy import create_engine, select, Table, Column, Integer, String, MetaData, insert, update
 
@@ -140,8 +142,6 @@ def add_address(id, street, house, entrance, floor, apartment):
         return False
 
 
-engine = create_engine(
-    "postgresql://yeikikepummkph:efe3f9c86b97c3fc4d42b6698b594d83df58ac07579548e12e3cd543557c86d2@ec2-54-155-110-181.eu-west-1.compute.amazonaws.com:5432/dbk7asg84aedin",
-    echo=False, pool_size=6)
+engine = create_engine(db_connect, echo=False, pool_size=6)
 meta.create_all(engine)
 conn = engine.connect()
