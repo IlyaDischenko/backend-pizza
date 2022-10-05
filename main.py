@@ -44,10 +44,11 @@ def confirm_token(data: Code):
     if check_code(number=data.number, code=data.code):
         res = getJWT(exists_user_or_add(number=data.number))
         return {
+            "status": 200,
             "access token": res,
                 }
     elif not check_code(number=data.number, code=data.code):
-        return {"status": "error"}
+        return {"status": 400}
 
 
 @app.post('/api/refreshtoken')
@@ -57,7 +58,7 @@ def refresh_token(data: Token):
         if x != False:
             res = getJWT(user_id=x)
             return {
-                "token": res,
+                "access token": res,
                 # "refresh token": res[1]
                 }
         else:
@@ -66,7 +67,7 @@ def refresh_token(data: Token):
                 "error": "Not valid refresh token"
                 }
     except:
-        return {"status": "error"}
+        return {"status": 400}
 
 
 @app.post("/api/testtoken")
@@ -89,14 +90,14 @@ def set_email(data: Email):
         if check != False:
             add_email(id=check, email=data.email)
             update_last_active(check)
-            return {"status": "success"}
+            return {"status": 200}
         elif check == False:
             return {
                 "status": 401,
                 "error": "Not valid access token"
             }
     except:
-        return {"status": "error"}
+        return {"status": 400}
 
 
 @app.post("/api/set/name")
@@ -106,11 +107,11 @@ def set_name(data: Name):
         if check != False:
             add_name(id = check, name = data.name)
             update_last_active(check)
-            return {"status": "success"}
+            return {"status": 200}
         elif check == False:
-            return {"status": "Not valid token"}
+            return {"status": 400}
     except:
-        return {"status": "error"}
+        return {"status": 400}
 
 
 @app.post("/api/set/address")
@@ -120,16 +121,8 @@ def set_address(data: Address):
         if check != False:
             add_address(id=check, street=data.street, house=data.house, entrance=data.entrance, floor=data.floor, apartment=data.apartment)
             update_last_active(check)
-            return {"status": "success"}
+            return {"status": 200}
         elif check == False:
-            return {"status": "Not valid token"}
+            return {"status": 300}
     except:
-        return {"status": "error"}
-
-@app.get("/yoyo")
-def main():
-    return {"status": "okey"}
-
-@app.get("/damir")
-def main():
-    return {"status": "damir dolboyob"}
+        return {"status": 200}
