@@ -44,8 +44,7 @@ def confirm_token(data: Code):
     if check_code(number=data.number, code=data.code):
         res = getJWT(exists_user_or_add(number=data.number))
         return {
-            "access token": res[0],
-            "refresh token": res[1]
+            "access token": res,
                 }
     elif not check_code(number=data.number, code=data.code):
         return {"status": "error"}
@@ -58,8 +57,8 @@ def refresh_token(data: Token):
         if x != False:
             res = getJWT(user_id=x)
             return {
-                "token": res[0],
-                "refresh token": res[1]
+                "token": res,
+                # "refresh token": res[1]
                 }
         else:
             return {
@@ -67,7 +66,7 @@ def refresh_token(data: Token):
                 "error": "Not valid refresh token"
                 }
     except:
-        return {"error": "Token not valid"}
+        return {"status": "error"}
 
 
 @app.post("/api/testtoken")
