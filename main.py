@@ -44,11 +44,11 @@ def confirm_token(data: Code):
     if check_code(number=data.number, code=data.code):
         res = getJWT(exists_user_or_add(number=data.number))
         return {
-            "token": res[0],
+            "access token": res[0],
             "refresh token": res[1]
                 }
     elif not check_code(number=data.number, code=data.code):
-        return {"status": "Пользователь не найден"}
+        return {"status": "error"}
 
 
 @app.post('/api/refreshtoken')
