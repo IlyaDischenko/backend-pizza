@@ -147,7 +147,7 @@ def get_profile_info(id):
     # Берём пиццы из базы и возвращаем пользователю
     sel = select(
         [users.c.name, users.c.email, users.c.number, users.c.street, users.c.house, users.c.entrance, users.c.floor, users.c.apartment]).where(users.c.id == id)
-    res = conn.execute(sel).fetchall()
+    res = conn.execute(sel).fetchone()
     return res
 
 
