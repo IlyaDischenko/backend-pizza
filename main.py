@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from users.database_users.db_users import check_code, exists_user_or_add, add_email, add_name, add_address, update_last_active
+from users.database_users.db_users import check_code, exists_user_or_add, add_email, add_name, add_address, \
+    update_last_active, get_profile_info
 from users.database_users.model_users import Token, Number, Code, Email, Name, Address
 from users.database_users.products import get_pizzas, get_drinks
 from users.singin.call import call_service
@@ -70,12 +71,12 @@ def refresh_token(data: Token):
         return {"status": 400}
 
 
-@app.post("/api/testtoken")
-def test_token(token: Token):
+@app.get("/api/get/userinfo")
+def get_user_info(token: Token):
     check = middleware(token.token)
     if check != False:
-        update_last_active(check)
-        return {"payload": check}
+        user_data = get_profile_info(check)
+        return {"data": user_data}
     else:
         return {
             "status": 401,

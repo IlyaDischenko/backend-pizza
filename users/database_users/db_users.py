@@ -20,6 +20,7 @@ users = Table('Users', meta,
               Column('apartment', String(50))
               )
 
+
 last_active = Table('last_active', meta,
                     Column('id', Integer(), primary_key=True),
                     Column('id_user', Integer()),
@@ -140,6 +141,14 @@ def add_address(id, street, house, entrance, floor, apartment):
         return True
     except:
         return False
+
+
+def get_profile_info(id):
+    # Берём пиццы из базы и возвращаем пользователю
+    sel = select(
+        [users.c.id, users.c.name, users.c.email, users.c.number, users.c.street, users.c.house, users.c.entrance, users.c.floor, users.c.apartment]).where(users.c.id == id)
+    res = conn.execute(sel).fetchall()
+    return res
 
 
 engine = create_engine(db_connect, echo=False, pool_size=6)
