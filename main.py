@@ -88,7 +88,9 @@ def get_user_info_post(token: Token):
     check = middleware(token.token)
     if check != False:
         user_data = get_profile_info(check)
-        return {"data": user_data}
+        return {
+            "status": 200,
+            "data": user_data}
     else:
         return {
             "status": 401,
