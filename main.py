@@ -83,6 +83,18 @@ def get_user_info(token: Token):
                 "error": "Not valid access token"
                 }
 
+@app.post("/api/get/userinfo")
+def get_user_info_post(token: Token):
+    check = middleware(token.token)
+    if check != False:
+        user_data = get_profile_info(check)
+        return {"data": user_data}
+    else:
+        return {
+            "status": 401,
+                "error": "Not valid access token"
+                }
+
 
 @app.post("/api/set/email")
 def set_email(data: Email):
