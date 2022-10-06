@@ -24,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/get")
+@app.get("/get/all")
 def get_pizza():
     res_pizzas = get_pizzas()
     res_drinks = get_drinks()
@@ -32,7 +32,7 @@ def get_pizza():
             "drinks": res_drinks}
 
 
-@app.post("/api/gettoken")
+@app.post("/api/get/token")
 def get_token(num: Number):
     # Функция для отправки номера в сервис и добавление валидного кода в базу
     call_service(num.number)
@@ -46,7 +46,7 @@ def confirm_token(data: Code):
         res = getJWT(exists_user_or_add(number=data.number))
         return {
             "status": 200,
-            "access token": res,
+            "token": res,
                 }
     elif not check_code(number=data.number, code=data.code):
         return {"status": 400}
