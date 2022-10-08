@@ -103,8 +103,9 @@ def set_email(data: Email):
     check = middleware(data.token)
     if check != False:
         add_result = add_email(id=check, email=data.email)
+        update_last_active(check)
         if add_result == True:
-            update_last_active(check)
+
             return {"status": 200}
         else:
             return {"status": 400}
@@ -118,16 +119,17 @@ def set_email(data: Email):
 
 @app.post("/api/set/name")
 def set_name(data: Name):
-    try:
-        check = middleware(data.token)
-        if check != False:
-            add_name(id = check, name = data.name)
-            update_last_active(check)
+    check = middleware(data.token)
+    if check != False:
+        res = add_name(id=check, name=data.name)
+        update_last_active(check)
+        if res == True:
             return {"status": 200}
-        elif check == False:
+        else:
             return {"status": 400}
-    except:
-        return {"status": 400}
+    elif check == False:
+        return {"status": 401}
+
 
 
 @app.post("/api/set/address")
