@@ -1,5 +1,6 @@
 import time
 from decouple import config
+
 db_connect = config('database-connect-addres')
 
 from sqlalchemy import create_engine, select, Table, Column, Integer, String, MetaData, insert, update
@@ -8,9 +9,9 @@ meta = MetaData()
 
 users = Table('Users', meta,
               Column('id', Integer(), primary_key=True),
-              Column('name', String(50)),
-              Column('email', String(100), unique=True),
-              Column('number', String(50), unique=True),
+              Column('name', String(50), default=''),
+              Column('email', String(100), unique=True, default=''),
+              Column('number', String(50), unique=True, default=''),
 
               Column('city', String(100), default='Орёл'),
               Column('street', String(100), default=''),
@@ -19,7 +20,6 @@ users = Table('Users', meta,
               Column('floor', String(50), default=''),
               Column('apartment', String(50), default='')
               )
-
 
 last_active = Table('last_active', meta,
                     Column('id', Integer(), primary_key=True),
@@ -114,12 +114,20 @@ def update_last_active(id):
 
 
 def add_email(id, email):
+    sel = select(users.c.id).where(users.c.email == email)
+    res = conn.execute(sel).fetchall()
     # Добавляем почту
-    try:
-        ins = users.update().values(email=email).where(users.c.id == id)
-        fin = conn.execute(ins)
-        return True
-    except:
+
+
+    if len(res) == 0 or res[0][0] == id:
+        try:
+            ins = users.update().values(email=email).where(users.c.id == id)
+            fin = conn.execute(ins)
+
+            return True
+        except:
+            return False
+    else:
         return False
 
 
@@ -146,7 +154,8 @@ def add_address(id, street, house, entrance, floor, apartment):
 def get_profile_info(id):
     # Берём пиццы из базы и возвращаем пользователю
     sel = select(
-        [users.c.name, users.c.email, users.c.number, users.c.street, users.c.house, users.c.entrance, users.c.floor, users.c.apartment]).where(users.c.id == id)
+        [users.c.name, users.c.email, users.c.number, users.c.street, users.c.house, users.c.entrance, users.c.floor,
+         users.c.apartment]).where(users.c.id == id)
     res = conn.execute(sel).fetchone()
     return res
 

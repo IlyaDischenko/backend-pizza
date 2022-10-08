@@ -100,19 +100,20 @@ def get_user_info_post(token: Token):
 
 @app.post("/api/set/email")
 def set_email(data: Email):
-    try:
-        check = middleware(data.token)
-        if check != False:
-            add_email(id=check, email=data.email)
+    check = middleware(data.token)
+    if check != False:
+        add_result = add_email(id=check, email=data.email)
+        if add_result == True:
             update_last_active(check)
             return {"status": 200}
-        elif check == False:
-            return {
-                "status": 401,
-                "error": "Not valid access token"
-            }
-    except:
-        return {"status": 400}
+        else:
+            return {"status": 400}
+    elif check == False:
+        return {
+            "status": 401,
+            "error": "Not valid access token"
+        }
+
 
 
 @app.post("/api/set/name")
