@@ -13,11 +13,11 @@ users = Table('Users', meta,
               Column('number', String(50), unique=True),
 
               Column('city', String(100), default='Орёл'),
-              Column('street', String(100)),
-              Column('house', String(100)),
-              Column('entrance', String(50)),
-              Column('floor', String(50)),
-              Column('apartment', String(50))
+              Column('street', String(100), default=''),
+              Column('house', String(100), default=''),
+              Column('entrance', String(50), default=''),
+              Column('floor', String(50), default=''),
+              Column('apartment', String(50), default='')
               )
 
 
