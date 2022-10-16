@@ -4,7 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from users.database_users.db_users import check_code, exists_user_or_add, add_email, add_name, add_address, \
     update_last_active, get_profile_info
 from users.database_users.model_users import Token, Number, Code, Email, Name, Address
-from users.database_users.products import get_pizzas, get_drinks
+from users.orderAndProduct.models_orderPromo import Promocode
+from users.orderAndProduct.products import get_pizzas, get_drinks
+from users.orderAndProduct.promo import check_percent, check_rub, check_items
 from users.singin.call import call_service
 from users.singin.jwt_handler import getJWT, middleware, check_refresh
 
@@ -42,13 +44,14 @@ def get_token(num: Number):
 @app.post("/api/confirmtoken")
 def confirm_token(data: Code):
     # Функция для проверки кода о получения access токена
-    if check_code(number=data.number, code=data.code):
+    res = check_code(number=data.number, code=data.code)
+    if res:
         res = getJWT(exists_user_or_add(number=data.number))
         return {
             "status": 200,
             "token": res,
                 }
-    elif not check_code(number=data.number, code=data.code):
+    elif not res:
         return {"status": 400}
 
 
@@ -144,3 +147,17 @@ def set_address(data: Address):
             return {"status": 300}
     except:
         return {"status": 200}
+
+
+@app.post("/api/check/promocode")
+def check_promocode(data: Promocode):
+    res_percent = check_percent(data.promocode)
+    if res_percent == False:
+        res_rub = check_rub(data.promocode)
+        if res_rub == False:
+            res_item = check_items(data.promocode)
+            if res_item == False:
+                return {"status": 400}
+            else: return {"data": res_item, "status": 200}
+        else: return {"rub": res_rub, "status": 200}
+    else: return {"percent": res_percent, "status": 200}
