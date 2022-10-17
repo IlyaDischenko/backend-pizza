@@ -159,6 +159,6 @@ def check_promocode(data: Promocode):
             res_item = check_items(data.promocode)
             if res_item == False:
                 return {"status": 400}
-            else: return {"type": 1, "item": res_item, "status": 200}
-        else: return {"type": 2, "rub": res_rub, "status": 200}
-    else: return {"type": 3, "percent": res_percent, "status": 200}
+            else: return {"type": 1, "number": data.number, "item": res_item, "status": 200}
+        else: return {"type": 2, "number": data.number, "rub": res_rub, "status": 200}
+    else: return {"type": 3, "number": data.number, "percent": res_percent, "status": 200}
