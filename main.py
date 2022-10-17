@@ -151,6 +151,7 @@ def set_address(data: Address):
 
 @app.post("/api/check/promocode")
 def check_promocode(data: Promocode):
+    # ДОБАВИТЬ ПРОВЕРКУ НА РЕГИСТР!!!!
     res_percent = check_percent(data.promocode)
     if res_percent == False:
         res_rub = check_rub(data.promocode)
@@ -158,6 +159,6 @@ def check_promocode(data: Promocode):
             res_item = check_items(data.promocode)
             if res_item == False:
                 return {"status": 400}
-            else: return {"data": res_item, "status": 200}
-        else: return {"rub": res_rub, "status": 200}
-    else: return {"percent": res_percent, "status": 200}
+            else: return {"type": 1, "item": res_item, "status": 200}
+        else: return {"type": 2, "rub": res_rub, "status": 200}
+    else: return {"type": 3, "percent": res_percent, "status": 200}
