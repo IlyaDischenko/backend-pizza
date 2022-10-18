@@ -152,10 +152,4 @@ def set_address(data: Address):
 @app.post("/api/check/promocode")
 def check_promocode(data: Promocode):
     # ДОБАВИТЬ ПРОВЕРКУ НА РЕГИСТР!!!!
-    res_percent = check_discount(promo=data.promocode, number=data.number)
-
-    if res_percent == {'status': 400}:
-        return res_percent
-
-    else:
-        return res_percent
+    return check_discount(promo=data.promocode, number=data.number)
