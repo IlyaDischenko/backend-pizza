@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import json
 
 from users.database_users.db_users import check_code, exists_user_or_add, add_email, add_name, add_address, \
     update_last_active, get_profile_info
 from users.database_users.model_users import Token, Number, Code, Email, Name, Address
-from users.orderAndProduct.models_orderPromo import Promocode
+from users.orderAndProduct.models_orderPromo import Promocode, Insert_promocode
 from users.orderAndProduct.products import get_pizzas, get_drinks
-from users.orderAndProduct.promo import check_discount
+from users.orderAndProduct.promo import check_discount, insert_json
 from users.singin.call import call_service
 from users.singin.jwt_handler import getJWT, middleware, check_refresh
 
@@ -25,6 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get("/get/all")
 def get_pizza():
@@ -50,7 +52,7 @@ def confirm_token(data: Code):
         return {
             "status": 200,
             "token": res,
-                }
+        }
     elif not res:
         return {"status": 400}
 
@@ -64,12 +66,12 @@ def refresh_token(data: Token):
             return {
                 "access token": res,
                 # "refresh token": res[1]
-                }
+            }
         else:
             return {
                 "status": 401,
                 "error": "Not valid refresh token"
-                }
+            }
     except:
         return {"status": 400}
 
@@ -83,8 +85,9 @@ def get_user_info(token: Token):
     else:
         return {
             "status": 401,
-                "error": "Not valid access token"
-                }
+            "error": "Not valid access token"
+        }
+
 
 @app.post("/api/get/userinfo")
 def get_user_info_post(token: Token):
@@ -97,8 +100,8 @@ def get_user_info_post(token: Token):
     else:
         return {
             "status": 401,
-                "error": "Not valid access token"
-                }
+            "error": "Not valid access token"
+        }
 
 
 @app.post("/api/set/email")
@@ -119,7 +122,6 @@ def set_email(data: Email):
         }
 
 
-
 @app.post("/api/set/name")
 def set_name(data: Name):
     check = middleware(data.token)
@@ -134,13 +136,13 @@ def set_name(data: Name):
         return {"status": 401}
 
 
-
 @app.post("/api/set/address")
 def set_address(data: Address):
     try:
         check = middleware(data.token)
         if check != False:
-            add_address(id=check, street=data.street, house=data.house, entrance=data.entrance, floor=data.floor, apartment=data.apartment)
+            add_address(id=check, street=data.street, house=data.house, entrance=data.entrance, floor=data.floor,
+                        apartment=data.apartment)
             update_last_active(check)
             return {"status": 200}
         elif check == False:
@@ -151,5 +153,12 @@ def set_address(data: Address):
 
 @app.post("/api/check/promocode")
 def check_promocode(data: Promocode):
-    # ДОБАВИТЬ ПРОВЕРКУ НА РЕГИСТР!!!!
     return check_discount(promo=data.promocode, number=data.number)
+
+
+@app.post("/api/insert/promocode")
+def insert_promocode(data: Insert_promocode):
+    js = json.dumps(data.return_data)
+    insert_json(promocode=data.promocode, count=data.count, type=data.type, return_data=js,
+                min_sum=data.min_sum, need_number=data.need_number, number=data.number, is_view=data.is_view)
+    return {"success": 1}
