@@ -1,10 +1,10 @@
 import time
 from decouple import config
 
-db_connect = config('database-connect-addres')
-
 from sqlalchemy import create_engine, select, Table, Column, Integer, String, MetaData, insert, update
 
+
+db_connect = config('database-connect-addres')
 meta = MetaData()
 
 users = Table('Users', meta,
