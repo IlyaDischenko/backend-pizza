@@ -6,7 +6,7 @@ from users.database_users.db_users import check_code, exists_user_or_add, add_em
 from users.database_users.model_users import Token, Number, Code, Email, Name, Address
 from users.orderAndProduct.models_orderPromo import Promocode
 from users.orderAndProduct.products import get_pizzas, get_drinks
-from users.orderAndProduct.promo import check_percent, check_rub, check_items
+from users.orderAndProduct.promo import check_discount
 from users.singin.call import call_service
 from users.singin.jwt_handler import getJWT, middleware, check_refresh
 
@@ -152,16 +152,10 @@ def set_address(data: Address):
 @app.post("/api/check/promocode")
 def check_promocode(data: Promocode):
     # ДОБАВИТЬ ПРОВЕРКУ НА РЕГИСТР!!!!
-    res_percent = check_percent(promo=data.promocode, number=data.number)
-# sadsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    if res_percent == False:
+    res_percent = check_discount(promo=data.promocode, number=data.number)
+
+    if res_percent == {'status': 400}:
         return res_percent
-        # res_rub = check_rub(data.promocode)
-        # if res_rub == False:
-        #     res_item = check_items(data.promocode)
-        #     if res_item == False:
-        #         return {"status": 400}
-        #     else: return {"type": 1, "number": data.number, "item": res_item, "status": 200}
-        # else: return {"type": 2, "number": data.number, "rub": res_rub, "status": 200}
+
     else:
         return res_percent
