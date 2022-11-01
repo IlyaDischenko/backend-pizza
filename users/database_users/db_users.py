@@ -152,12 +152,18 @@ def add_address(id, street, house, entrance, floor, apartment):
 
 
 def get_profile_info(id):
-    # Берём пиццы из базы и возвращаем пользователю
+    # Возвращаем информацию пользователя
     sel = select(
         [users.c.name, users.c.email, users.c.number, users.c.street, users.c.house, users.c.entrance, users.c.floor,
          users.c.apartment]).where(users.c.id == id)
     res = conn.execute(sel).fetchone()
     return res
+
+def get_user_number(id):
+    # Возвращаем номер пользователя
+    sel = select(users.c.number).where(users.c.id == id)
+    res = conn.execute(sel).fetchone()
+    return res[0]
 
 
 engine = create_engine(db_connect, echo=False, pool_size=6)

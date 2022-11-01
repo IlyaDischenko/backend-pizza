@@ -3,11 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 import json
 
 from users.database_users.db_users import check_code, exists_user_or_add, add_email, add_name, add_address, \
-    update_last_active, get_profile_info
+    update_last_active, get_profile_info, get_user_number
 from users.database_users.model_users import Token, Number, Code, Email, Name, Address
-from users.orderAndProduct.models_orderPromo import Promocode, Insert_promocode
+from users.orderAndProduct.models_orderPromo import Promocode, Insert_promocode, Order
 from users.orderAndProduct.products import get_pizzas, get_drinks
 from users.orderAndProduct.promo import check_discount, insert_json
+from users.orderAndProduct.order import get_order, set_order
 from users.singin.call import call_service
 from users.singin.jwt_handler import getJWT, middleware, check_refresh
 
@@ -162,3 +163,33 @@ def insert_promocode(data: Insert_promocode):
     insert_json(promocode=data.promocode, count=data.count, type=data.type, return_data=js,
                 min_sum=data.min_sum, need_number=data.need_number, number=data.number, is_view=data.is_view)
     return {"success": 1}
+
+
+@app.post("/api/set_order")
+def testPoint(data: Order):
+    check = middleware(data.token)
+
+    if check:
+        dpizzas = json.dumps(data.pizzas)
+        ddrinks = json.dumps(data.drinks)
+        user_data = get_user_number(check)
+        set_order(user=user_data, pizzas=dpizzas, drinks=ddrinks, promocode=data.promocode,
+                  street=data.street, house=data.house, entrance=data.entrance,
+                  floor=data.floor, apartment=data.apartment, device=data.device, paytype=data.paytype,
+                  comment=data.comment, status=data.status)
+        return {"data": user_data, "check": check}
+    else:
+        return {
+            "status": 401,
+            "error": "Not valid access token"
+        }
+
+
+@app.get("/api/get/order/accepted")
+def testPoint():
+    return get_order(status="accepted")
+
+
+@app.get("/api/get/order/ready")
+def testPoint():
+    return get_order(status="ready")

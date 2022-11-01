@@ -1,7 +1,8 @@
 import json
+import datetime
 
 from decouple import config
-from sqlalchemy import create_engine, select, Table, Column, Integer, String, MetaData, insert, update, Boolean, JSON
+from sqlalchemy import create_engine, select, Table, Column, Integer, String, MetaData, insert, update, Boolean, DateTime
 
 db_connect = config('database-connect-addres')
 meta = MetaData()
@@ -19,6 +20,8 @@ discount = Table('discount', meta,
                  Column('number', String(255)),
                  Column('is_view', Boolean(), default=True),
                  )
+
+
 
 
 def insert_json(promocode, count, type, return_data, min_sum, need_number, number, is_view):
