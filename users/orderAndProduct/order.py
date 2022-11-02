@@ -30,16 +30,19 @@ orders = Table('orders', meta,
                Column('comment', String(), default=None),
                Column('status', String()),
                # Column('deliver', ForeignKey(deliver.id)),
-               Column('data', DateTime(), default=datetime.datetime.now())
+               Column('data', DateTime())
                )
 
+streets = Table('streets', meta,
+                Column('street', String(), default=None),
+                Column('is_view', Boolean(), default=True))
 
 def set_order(user, pizzas, drinks, promocode, street, house, entrance, floor, apartment, device, paytype, comment,
-              status):
+              status, data):
     ins = orders.insert().values(user=user, pizzas=pizzas, drinks=drinks, promocode=promocode,
                                  street=street, house=house, entrance=entrance,
                                  floor=floor, apartment=apartment, device=device, paytype=paytype, comment=comment,
-                                 status=status)
+                                 status=status, data=data)
     fin = conn.execute(ins)
 
 

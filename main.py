@@ -1,3 +1,5 @@
+import datetime
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import json
@@ -176,7 +178,7 @@ def testPoint(data: Order):
         set_order(user=user_data, pizzas=dpizzas, drinks=ddrinks, promocode=data.promocode,
                   street=data.street, house=data.house, entrance=data.entrance,
                   floor=data.floor, apartment=data.apartment, device=data.device, paytype=data.paytype,
-                  comment=data.comment, status=data.status)
+                  comment=data.comment, status=data.status, data=datetime.datetime.now())
         return {"data": user_data, "check": check}
     else:
         return {
