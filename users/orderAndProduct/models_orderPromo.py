@@ -20,7 +20,6 @@ class Insert_promocode(BaseModel):
 
 class Order(BaseModel):
     token: bytes = Field(default=None)
-    number: str = Field(default=None)
     pizzas: object = Field(default=None)
     drinks: object = Field(default=None)
     promocode: str = Field(default=None)
@@ -34,4 +33,3 @@ class Order(BaseModel):
     device: str = Field(default=None)
     paytype: str = Field(default=None)
     comment: str = Field(default=None)
-    status: str = Field(default=None)

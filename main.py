@@ -1,5 +1,6 @@
 import datetime
 
+import pytz
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import json
@@ -172,13 +173,16 @@ def testPoint(data: Order):
     check = middleware(data.token)
 
     if check:
+        tz_moscow = datetime.timedelta(hours=3)
+        time_now = datetime.datetime.now() + tz_moscow
+
         dpizzas = json.dumps(data.pizzas)
         ddrinks = json.dumps(data.drinks)
         user_data = get_user_number(check)
         set_order(user=user_data, pizzas=dpizzas, drinks=ddrinks, promocode=data.promocode,
                   street=data.street, house=data.house, entrance=data.entrance,
                   floor=data.floor, apartment=data.apartment, device=data.device, paytype=data.paytype,
-                  comment=data.comment, status=data.status, data=datetime.datetime.now())
+                  comment=data.comment, status="accepted", data=time_now)
         return {"data": user_data, "check": check}
     else:
         return {
