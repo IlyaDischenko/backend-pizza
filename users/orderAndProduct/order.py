@@ -37,12 +37,13 @@ streets = Table('streets', meta,
                 Column('street', String(), default=None),
                 Column('is_view', Boolean(), default=True))
 
-def set_order(user, pizzas, drinks, promocode, street, house, entrance, floor, apartment, device, paytype, comment,
-              status, data):
+def set_order(user, pizzas, drinks, promocode, promocode_item, street, house, entrance, floor, apartment, device,
+              paytype, price, comment, status, data):
     ins = orders.insert().values(user=user, pizzas=pizzas, drinks=drinks, promocode=promocode,
+                                 promocode_item=promocode_item,
                                  street=street, house=house, entrance=entrance,
-                                 floor=floor, apartment=apartment, device=device, paytype=paytype, comment=comment,
-                                 status=status, data=data)
+                                 floor=floor, apartment=apartment, device=device, paytype=paytype, price=price,
+                                 comment=comment, status=status, data=data)
     fin = conn.execute(ins)
 
 
@@ -71,6 +72,9 @@ def get_order(status):
             "data": i[13]
         })
     return result
+
+
+
 
 
 engine = create_engine(db_connect, echo=False, pool_size=6)

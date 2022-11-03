@@ -9,7 +9,7 @@ from users.database_users.db_users import check_code, exists_user_or_add, add_em
     update_last_active, get_profile_info, get_user_number
 from users.database_users.model_users import Token, Number, Code, Email, Name, Address
 from users.orderAndProduct.models_orderPromo import Promocode, Insert_promocode, Order
-from users.orderAndProduct.products import get_pizzas, get_drinks
+from users.orderAndProduct.products import get_pizzas, get_drinks, check_pizzas, check_drinks
 from users.orderAndProduct.promo import check_discount, insert_json
 from users.orderAndProduct.order import get_order, set_order
 from users.singin.call import call_service
@@ -168,22 +168,66 @@ def insert_promocode(data: Insert_promocode):
     return {"success": 1}
 
 
-@app.post("/api/set_order")
+@app.post("/api/set/order")
 def testPoint(data: Order):
     check = middleware(data.token)
 
     if check:
+        # Не забыть поставить нормальное время при деплое
         tz_moscow = datetime.timedelta(hours=3)
         time_now = datetime.datetime.now() + tz_moscow
 
-        dpizzas = json.dumps(data.pizzas)
-        ddrinks = json.dumps(data.drinks)
-        user_data = get_user_number(check)
-        set_order(user=user_data, pizzas=dpizzas, drinks=ddrinks, promocode=data.promocode,
-                  street=data.street, house=data.house, entrance=data.entrance,
-                  floor=data.floor, apartment=data.apartment, device=data.device, paytype=data.paytype,
-                  comment=data.comment, status="accepted", data=time_now)
-        return {"data": user_data, "check": check}
+        p = check_pizzas(data.pizzas)
+        d = check_drinks(data.drinks)
+
+        sum = 0
+        if p != False and d != False:
+            sum = p + d
+            dpizzas = json.dumps(data.pizzas)
+            ddrinks = json.dumps(data.drinks)
+            user_data = get_user_number(check)
+
+            discount_data = None
+
+            if len(data.promocode) > 0:
+                z = check_discount(promo=data.promocode, number=user_data)
+                if z['status'] == 200:
+                    #  Если промокод успешно проверен
+                    if z['type'] == 1:
+                        #  Если тип промокода первый
+                        if z['min_sum'] < sum:
+                            #  Проверка на минимальную сумму
+                            sum = (sum // 100) * (100 - int(z['discount_data']))
+                        else:
+                            return {"status": 460}
+                    elif z['type'] == 2:
+                        #  Если тип промокода второй
+                        if z['min_sum'] < sum:
+                            #  Проверка на минимальную сумму
+                            if sum - int(z['discount_data']) < 0:
+                                 # Если сумма со скидкой в рублях меньше нуля
+                                return {"status": 461}
+                            else:
+                                sum -= int(z['discount_data'])
+                        else:
+                            return {"status": 460}
+                    elif z['type'] == 3:
+                        discount_data = json.dumps(z['discount_data'])
+                elif z['status'] == 400:
+                    return {"status": 450}
+                elif z['status'] == 401:
+                    return {"status": 451}
+                elif z['status'] == 422:
+                    return {"status": 452}
+
+            set_order(user=user_data, pizzas=dpizzas, drinks=ddrinks, promocode=data.promocode,
+                      promocode_item=discount_data,
+                      street=data.street, house=data.house, entrance=data.entrance,
+                      floor=data.floor, apartment=data.apartment, device=data.device, paytype=data.paytype,
+                      price=sum, comment=data.comment, status="accepted", data=time_now)
+            return {"status": 200, "sum": sum}
+        else:
+            return {"status": 400}
     else:
         return {
             "status": 401,
