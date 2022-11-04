@@ -49,54 +49,59 @@ def check_pizzas(pizza):
     result = []
     local_sum = 0
     sum = 0
-    for i in pizza:
-        if i["size"] == 25:
-            sel = select([pizzas.c.is_view, pizzas.c.price_small]).where(pizzas.c.id == i["id"])
-            res = conn.execute(sel).fetchone()
+    if len(pizza) > 0:
+        for i in pizza:
+            if i["size"] == 25:
+                sel = select([pizzas.c.is_view, pizzas.c.price_small]).where(pizzas.c.id == i["id"])
+                res = conn.execute(sel).fetchone()
 
-            if res[0]:
-                local_sum = res[1]
-                sum = sum + (local_sum * i["count"])
-                continue
-            elif not res[0]:
-                return False
-        elif i["size"] == 30:
-            sel = select([pizzas.c.is_view, pizzas.c.price_middle]).where(pizzas.c.id == i["id"])
-            res = conn.execute(sel).fetchone()
+                if res[0]:
+                    local_sum = res[1]
+                    sum = sum + (local_sum * i["count"])
+                    continue
+                elif not res[0]:
+                    return False
+            elif i["size"] == 30:
+                sel = select([pizzas.c.is_view, pizzas.c.price_middle]).where(pizzas.c.id == i["id"])
+                res = conn.execute(sel).fetchone()
 
-            if res[0]:
-                local_sum = res[1]
-                sum = sum + (local_sum * i["count"])
-                continue
-            elif not res[0]:
-                return False
-        elif i["size"] == 35:
-            sel = select([pizzas.c.is_view, pizzas.c.price_big]).where(pizzas.c.id == i["id"])
-            res = conn.execute(sel).fetchone()
+                if res[0]:
+                    local_sum = res[1]
+                    sum = sum + (local_sum * i["count"])
+                    continue
+                elif not res[0]:
+                    return False
+            elif i["size"] == 35:
+                sel = select([pizzas.c.is_view, pizzas.c.price_big]).where(pizzas.c.id == i["id"])
+                res = conn.execute(sel).fetchone()
 
-            if res[0]:
-                local_sum = res[1]
-                sum = sum + (local_sum * i["count"])
-                continue
-            elif not res[0]:
-                return False
-    return sum
+                if res[0]:
+                    local_sum = res[1]
+                    sum = sum + (local_sum * i["count"])
+                    continue
+                elif not res[0]:
+                    return False
+        return sum
+    else:
+        return 0
 
 def check_drinks(drink):
     local_sum = 0
     sum = 0
-    for i in drink:
-        sel = select([drinks.c.is_view, drinks.c.price]).where(drinks.c.id == i["id"])
-        res = conn.execute(sel).fetchone()
+    if len(drink) > 0:
+        for i in drink:
+            sel = select([drinks.c.is_view, drinks.c.price]).where(drinks.c.id == i["id"])
+            res = conn.execute(sel).fetchone()
 
-        if res[0]:
-            local_sum = res[1]
-            sum = sum + (local_sum * i["count"])
-            continue
-        elif not res[0]:
-            return False
-
-    return sum
+            if res[0]:
+                local_sum = res[1]
+                sum = sum + (local_sum * i["count"])
+                continue
+            elif not res[0]:
+                return False
+        return sum
+    else:
+        return 0
 
 
 
