@@ -9,7 +9,8 @@ from users.database_users.db_users import check_code, exists_user_or_add, add_em
     update_last_active, get_profile_info, get_user_number
 from users.database_users.model_users import Token, Number, Code, Email, Name, Address
 from users.orderAndProduct.models_orderPromo import Promocode, Insert_promocode, Order
-from users.orderAndProduct.products import get_pizzas, get_drinks, check_pizzas, check_drinks
+from users.orderAndProduct.products import get_pizzas, get_drinks, check_pizzas, check_drinks, get_drink_sum, \
+    get_pizza_sum
 from users.orderAndProduct.promo import check_discount, insert_json
 from users.orderAndProduct.order import get_order, set_order
 from users.singin.call import call_service
@@ -180,9 +181,9 @@ def testPoint(data: Order):
         p = check_pizzas(data.pizzas)
         d = check_drinks(data.drinks)
 
-        sum = 0
-        if p != False and d != False:
-            sum = p + d
+        if p and d:
+            sum = get_pizza_sum(data.pizzas) + get_drink_sum(data.drinks)
+
             dpizzas = json.dumps(data.pizzas)
             ddrinks = json.dumps(data.drinks)
             user_data = get_user_number(check)
@@ -213,6 +214,9 @@ def testPoint(data: Order):
                             return {"status": 460}
                     elif z['type'] == 3:
                         discount_data = json.dumps(z['discount_data'])
+                        sum += z['discount_data']['price']
+                        # print(z['discount_data']['price'])
+                        # print(type(z['discount_data']))
                 elif z['status'] == 400:
                     return {"status": 450}
                 elif z['status'] == 401:
