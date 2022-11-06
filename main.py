@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import json
 
 from users.database_users.db_users import check_code, exists_user_or_add, add_email, add_name, add_address, \
-    update_last_active, get_profile_info, get_user_number
+    update_last_active, get_profile_info, get_user_number, get_streets
 from users.database_users.model_users import Token, Number, Code, Email, Name, Address
 from users.orderAndProduct.models_orderPromo import Promocode, Insert_promocode, Order
 from users.orderAndProduct.products import get_pizzas, get_drinks, check_pizzas, check_drinks, get_drink_sum, \
@@ -178,10 +178,7 @@ def testPoint(data: Order):
         tz_moscow = datetime.timedelta(hours=3)
         time_now = datetime.datetime.now() + tz_moscow
 
-        p = check_pizzas(data.pizzas)
-        d = check_drinks(data.drinks)
-
-        if p and d:
+        if check_pizzas(data.pizzas) and check_drinks(data.drinks):
             sum = get_pizza_sum(data.pizzas) + get_drink_sum(data.drinks)
 
             dpizzas = json.dumps(data.pizzas)
@@ -206,7 +203,7 @@ def testPoint(data: Order):
                         if z['min_sum'] < sum:
                             #  Проверка на минимальную сумму
                             if sum - int(z['discount_data']) < 0:
-                                 # Если сумма со скидкой в рублях меньше нуля
+                                # Если сумма со скидкой в рублях меньше нуля
                                 return {"status": 461}
                             else:
                                 sum -= int(z['discount_data'])
@@ -247,3 +244,8 @@ def testPoint():
 @app.get("/api/get/order/ready")
 def testPoint():
     return get_order(status="ready")
+
+
+@app.get("/api/get/street")
+def getStreet():
+    return {"status": 200, "street": get_streets()}

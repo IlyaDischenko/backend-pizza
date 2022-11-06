@@ -1,8 +1,7 @@
 import time
 from decouple import config
 
-from sqlalchemy import create_engine, select, Table, Column, Integer, String, MetaData, insert, update
-
+from sqlalchemy import create_engine, select, Table, Column, Integer, String, MetaData, insert, update, Boolean
 
 db_connect = config('database-connect-addres')
 meta = MetaData()
@@ -33,6 +32,19 @@ valid_code = Table('valid_code', meta,
                    Column('code', String(255)),
                    Column('data', String(255))
                    )
+streets = Table('street', meta,
+                Column('street', String()),
+                Column('is_view', Boolean(), default=True)
+                )
+
+
+def get_streets():
+    sel = select([streets.c.street]).where(streets.c.is_view == True)
+    res = conn.execute(sel).fetchall()
+    result = []
+    for i in res:
+        result.append(i["street"])
+    return result
 
 
 def insert_code(number, code):
@@ -118,7 +130,6 @@ def add_email(id, email):
     res = conn.execute(sel).fetchall()
     # Добавляем почту
 
-
     if len(res) == 0 or res[0][0] == id:
         try:
             ins = users.update().values(email=email).where(users.c.id == id)
@@ -158,6 +169,7 @@ def get_profile_info(id):
          users.c.apartment]).where(users.c.id == id)
     res = conn.execute(sel).fetchone()
     return res
+
 
 def get_user_number(id):
     # Возвращаем номер пользователя
