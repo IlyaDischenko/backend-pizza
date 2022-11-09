@@ -187,21 +187,31 @@ def testPoint(data: Order):
 
             discount_data = None
 
+            type = None
+            min_s = None
+            message = "None"
+            sum1 = 0
+
             if len(data.promocode) > 0:
                 z = check_discount(promo=data.promocode, number=user_data)
                 if z['status'] == 200:
                     #  Если промокод успешно проверен
                     if z['type'] == 1:
+                        type = 1
+                        min_s = z['min_sum']
+                        sum1 = sum
                         #  Если тип промокода первый
-                        if z['min_sum'] < sum:
+                        if z['min_sum'] > sum:
                             #  Проверка на минимальную сумму
                             return {"status": 460}
                         else:
                             # Если всё нормально, то считаем сумму
                             sum = (sum // 100) * (100 - int(z['discount_data']))
                     elif z['type'] == 2:
+                        type = 2
+                        min_s = z['min_sum']
                         #  Если тип промокода второй
-                        if z['min_sum'] < sum:
+                        if z['min_sum'] > sum:
                             #  Проверка на минимальную сумму
                             return {"status": 460}
                         else:
@@ -211,8 +221,10 @@ def testPoint(data: Order):
                             else:
                                 sum -= int(z['discount_data'])
                     elif z['type'] == 3:
+                        type = 3
+                        min_s = z['min_sum']
                         #  Если тип промокода третий
-                        if z['min_sum'] < sum:
+                        if z['min_sum'] > sum:
                             #  Проверка на минимальную сумму
                             return {"status": 460}
                         else:
@@ -231,7 +243,7 @@ def testPoint(data: Order):
                       street=data.street, house=data.house, entrance=data.entrance,
                       floor=data.floor, apartment=data.apartment, device=data.device, paytype=data.paytype,
                       price=sum, comment=data.comment, status="accepted", data=time_now)
-            return {"status": 200, "sum": sum}
+            return {"status": 200, "sum": sum, "pizzas": dpizzas, "drink": ddrinks, "promocode_item": discount_data, "type": type, "min_summ": min_s, "message": message, "sum1": sum1}
         else:
             return {"status": 400}
     else:
