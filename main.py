@@ -195,25 +195,30 @@ def testPoint(data: Order):
                         #  Если тип промокода первый
                         if z['min_sum'] < sum:
                             #  Проверка на минимальную сумму
-                            sum = (sum // 100) * (100 - int(z['discount_data']))
-                        else:
                             return {"status": 460}
+                        else:
+                            # Если всё нормально, то считаем сумму
+                            sum = (sum // 100) * (100 - int(z['discount_data']))
                     elif z['type'] == 2:
                         #  Если тип промокода второй
                         if z['min_sum'] < sum:
                             #  Проверка на минимальную сумму
+                            return {"status": 460}
+                        else:
                             if sum - int(z['discount_data']) < 0:
                                 # Если сумма со скидкой в рублях меньше нуля
                                 return {"status": 461}
                             else:
                                 sum -= int(z['discount_data'])
-                        else:
-                            return {"status": 460}
                     elif z['type'] == 3:
-                        discount_data = json.dumps(z['discount_data'])
-                        sum += z['discount_data']['price']
-                        # print(z['discount_data']['price'])
-                        # print(type(z['discount_data']))
+                        #  Если тип промокода третий
+                        if z['min_sum'] < sum:
+                            #  Проверка на минимальную сумму
+                            return {"status": 460}
+                        else:
+                            discount_data = json.dumps(z['discount_data'])
+                            sum += z['discount_data']['price']
+
                 elif z['status'] == 400:
                     return {"status": 450}
                 elif z['status'] == 401:
