@@ -68,7 +68,7 @@ def get_order(number):
             "floor": i[8],
             "apartment": i[9],
             "paytype": i[10],
-            "totalprice" i[11]
+            "totalprice": i[11],
             "comment": i[12],
             "status": i[13],
             "data": i[14],
