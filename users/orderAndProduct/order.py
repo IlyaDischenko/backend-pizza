@@ -61,7 +61,7 @@ def get_order(number):
             "user": i[1],
             "pizzas": json.loads(i[2]),
             "drink": json.loads(i[3]),
-            "promocode_item": i[4],
+            "promocode_item": json.loads(i[4]),
             "street": i[5],
             "house": i[6],
             "entrance": i[7],
