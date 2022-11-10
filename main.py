@@ -1,14 +1,15 @@
 import datetime
+import time
 
 import pytz
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
 import json
 
 from users.database_users.db_users import check_code, exists_user_or_add, add_email, add_name, add_address, \
     update_last_active, get_profile_info, get_user_number, get_streets
 from users.database_users.model_users import Token, Number, Code, Email, Name, Address
-from users.orderAndProduct.models_orderPromo import Promocode, Insert_promocode, Order
+from users.orderAndProduct.models_orderPromo import Promocode, Insert_promocode, Order, GetOrder
 from users.orderAndProduct.products import get_pizzas, get_drinks, check_pizzas, check_drinks, get_drink_sum, \
     get_pizza_sum
 from users.orderAndProduct.promo import check_discount, insert_json
@@ -242,8 +243,8 @@ def testPoint(data: Order):
                       promocode_item=discount_data,
                       street=data.street, house=data.house, entrance=data.entrance,
                       floor=data.floor, apartment=data.apartment, device=data.device, paytype=data.paytype,
-                      price=sum, comment=data.comment, status="accepted", data=time_now)
-            return {"status": 200, "sum": sum, "pizzas": dpizzas, "drink": ddrinks, "promocode_item": discount_data, "type": type, "min_summ": min_s, "message": message, "sum1": sum1}
+                      price=sum, comment=data.comment, status="accepted", data=time_now.strftime('%Y-%m-%d %H:%M:%S'))
+            return {"status": 200, "sum": sum}
         else:
             return {"status": 400}
     else:
@@ -253,9 +254,11 @@ def testPoint(data: Order):
         }
 
 
-@app.get("/api/get/order/accepted")
-def testPoint():
-    return get_order(status="accepted")
+@app.get("/api/get/order/all")
+def get_orders(request: Request):
+    check = middleware(request.headers.get('authorization'))
+    user_data = get_user_number(check)
+    return get_order(user_data)
 
 
 @app.get("/api/get/order/ready")

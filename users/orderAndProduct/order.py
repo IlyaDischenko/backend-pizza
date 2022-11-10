@@ -37,6 +37,7 @@ streets = Table('streets', meta,
                 Column('street', String(), default=None),
                 Column('is_view', Boolean(), default=True))
 
+
 def set_order(user, pizzas, drinks, promocode, promocode_item, street, house, entrance, floor, apartment, device,
               paytype, price, comment, status, data):
     ins = orders.insert().values(user=user, pizzas=pizzas, drinks=drinks, promocode=promocode,
@@ -47,11 +48,11 @@ def set_order(user, pizzas, drinks, promocode, promocode_item, street, house, en
     fin = conn.execute(ins)
 
 
-def get_order(status):
+def get_order(number):
     sel = select(
         [orders.c.id, orders.c.user, orders.c.pizzas, orders.c.drinks, orders.c.promocode_item, orders.c.street,
          orders.c.house, orders.c.entrance, orders.c.floor, orders.c.apartment, orders.c.paytype,
-         orders.c.comment, orders.c.status, orders.c.data]).where(orders.c.status == status)
+         orders.c.comment, orders.c.status, orders.c.data]).where(orders.c.user == number)
     res = conn.execute(sel).fetchall()
     result = []
     for i in res:
@@ -69,12 +70,9 @@ def get_order(status):
             "paytype": i[10],
             "comment": i[11],
             "status": i[12],
-            "data": i[13]
+            "data": i[13],
         })
     return result
-
-
-
 
 
 engine = create_engine(db_connect, echo=False, pool_size=6)

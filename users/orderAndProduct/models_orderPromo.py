@@ -33,3 +33,6 @@ class Order(BaseModel):
     device: str = Field(default=None)
     paytype: str = Field(default=None)
     comment: str = Field(default=None)
+
+class GetOrder(BaseModel):
+    number: str = Field(default=None)
