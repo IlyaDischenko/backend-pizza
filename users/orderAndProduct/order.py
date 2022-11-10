@@ -51,7 +51,7 @@ def set_order(user, pizzas, drinks, promocode, promocode_item, street, house, en
 def get_order(number):
     sel = select(
         [orders.c.id, orders.c.user, orders.c.pizzas, orders.c.drinks, orders.c.promocode_item, orders.c.street,
-         orders.c.house, orders.c.entrance, orders.c.floor, orders.c.apartment, orders.c.paytype, order.c.price,
+         orders.c.house, orders.c.entrance, orders.c.floor, orders.c.apartment, orders.c.paytype, orders.c.price,
          orders.c.comment, orders.c.status, orders.c.data]).where(orders.c.user == number)
     res = conn.execute(sel).fetchall()
     result = []
