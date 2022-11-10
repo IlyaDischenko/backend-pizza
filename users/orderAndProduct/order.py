@@ -52,16 +52,20 @@ def get_order(number):
     sel = select(
         [orders.c.id, orders.c.user, orders.c.pizzas, orders.c.drinks, orders.c.promocode_item, orders.c.street,
          orders.c.house, orders.c.entrance, orders.c.floor, orders.c.apartment, orders.c.paytype, orders.c.price,
-         orders.c.comment, orders.c.status, orders.c.data]).where(orders.c.user == number)
+         orders.c.comment, orders.c.status, orders.c.data]).where(orders.c.user == number).where(orders.c.status != "backout")
     res = conn.execute(sel).fetchall()
     result = []
     for i in res:
+        x = ""
+        if i[4] != None:
+            x = json.loads(i[4])
+
         result.append({
             "id": i[0],
             "user": i[1],
             "pizzas": json.loads(i[2]),
             "drink": json.loads(i[3]),
-            "promocode_item": json.loads(i[4]),
+            "promocode_item": x,
             "street": i[5],
             "house": i[6],
             "entrance": i[7],
@@ -74,6 +78,11 @@ def get_order(number):
             "data": i[14],
         })
     return result
+
+def backout_order(id):
+    ins = orders.update().values(status="backout").where(orders.c.id == id)
+    fin = conn.execute(ins)
+    # Доделать проверку на номер пользователя, который хочет удалить заказ
 
 
 engine = create_engine(db_connect, echo=False, pool_size=6)
