@@ -33,9 +33,6 @@ orders = Table('orders', meta,
                Column('data', DateTime())
                )
 
-streets = Table('streets', meta,
-                Column('street', String(), default=None),
-                Column('is_view', Boolean(), default=True))
 
 
 def set_order(user, pizzas, drinks, promocode, promocode_item, street, house, entrance, floor, apartment, device,
@@ -44,45 +41,61 @@ def set_order(user, pizzas, drinks, promocode, promocode_item, street, house, en
                                  promocode_item=promocode_item,
                                  street=street, house=house, entrance=entrance,
                                  floor=floor, apartment=apartment, device=device, paytype=paytype, price=price,
-                                 comment=comment, status=status, data=data)
-    fin = conn.execute(ins)
+                                 comment=comment, status=status, data=data).returning(
+                orders.c.id,
+                orders.c.pizzas,
+            )
+    fin = conn.execute(ins).fetchone()
+    return fin[0]
 
 
-def get_order(number):
+def get_order(id, number):
     sel = select(
         [orders.c.id, orders.c.user, orders.c.pizzas, orders.c.drinks, orders.c.promocode_item, orders.c.street,
          orders.c.house, orders.c.entrance, orders.c.floor, orders.c.apartment, orders.c.paytype, orders.c.price,
-         orders.c.comment, orders.c.status, orders.c.data]).where(orders.c.user == number).where(orders.c.status != "backout")
-    res = conn.execute(sel).fetchall()
-    result = []
-    for i in res:
-        x = ""
-        if i[4] != None:
-            x = json.loads(i[4])
+         orders.c.comment, orders.c.status, orders.c.data]).where(orders.c.id == id).where(orders.c.user == number)
+    res = conn.execute(sel).fetchone()
 
-        result.append({
-            "id": i[0],
-            "user": i[1],
-            "pizzas": json.loads(i[2]),
-            "drink": json.loads(i[3]),
-            "promocode_item": x,
-            "street": i[5],
-            "house": i[6],
-            "entrance": i[7],
-            "floor": i[8],
-            "apartment": i[9],
-            "paytype": i[10],
-            "totalprice": i[11],
-            "comment": i[12],
-            "status": i[13],
-            "data": i[14],
-        })
+    # print(res[13])
+
+
+    if res[13] == "backout" or res[13] == 'completed':
+        return {'status': 401, 'message': 'Этот заказ уже доставлен или отменён'}
+
+    # if res[13] == "accepted" or res[13] == "completed" or res[13] == "delivery":
+    x = ""
+    if res[4] != None:
+        # Проверка на наличие промокода
+        x = json.loads(res[4])
+
+    result = {
+        "id": res[0],
+        "user": res[1],
+        "pizzas": json.loads(res[2]),
+        "drink": json.loads(res[3]),
+        "promocode_item": x,
+        "street": res[5],
+        "house": res[6],
+        "entrance": res[7],
+        "floor": res[8],
+        "apartment": res[9],
+        "paytype": res[10],
+        "totalprice": res[11],
+        "comment": res[12],
+        "status": res[13],
+        "data": res[14],
+    }
+
     return result
 
-def backout_order(id):
-    ins = orders.update().values(status="backout").where(orders.c.id == id)
-    fin = conn.execute(ins)
-    # Доделать проверку на номер пользователя, который хочет удалить заказ
+
+def backout_order(id, number):
+    try:
+        ins = orders.update().values(status="backout").where(orders.c.id == id).where(orders.c.user == number)
+        fin = conn.execute(ins)
+        return {"server_status": 200}
+    except:
+        return {"server_status": 401}
 
 
 engine = create_engine(db_connect, echo=False, pool_size=6)

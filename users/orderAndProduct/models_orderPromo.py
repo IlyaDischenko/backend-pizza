@@ -36,3 +36,7 @@ class Order(BaseModel):
 
 class GetOrder(BaseModel):
     number: str = Field(default=None)
+
+class BackoutOrder(BaseModel):
+    token: bytes = Field(default=None)
+    order_id: int = Field(default=None)

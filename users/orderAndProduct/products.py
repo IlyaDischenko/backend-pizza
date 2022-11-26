@@ -27,6 +27,43 @@ drinks = Table('drinks', meta,
                )
 
 
+class Product:
+    db_connect = config('database-connect-addres')
+    engine = create_engine(db_connect, echo=False, pool_size=6)
+
+    def __init__(self):
+        self.conn = self.engine.connect()
+        meta = MetaData()
+        self.pizzas = Table('pizzas', meta,
+                            Column('id', Integer(), primary_key=True),
+                            Column('title', String(255)),
+                            Column('description', String()),
+                            Column('category', Integer()),
+                            Column('photo', String()),
+                            Column('price_small', Integer()),
+                            Column('price_middle', Integer()),
+                            Column('price_big', Integer()),
+                            Column('is_view', Boolean(), default=True),
+                            )
+
+    def get_pizza(self, id):
+        sel = select(
+            [pizzas.c.id, pizzas.c.title, pizzas.c.description, pizzas.c.photo, pizzas.c.price_small,
+             pizzas.c.price_middle, pizzas.c.price_big]).where(pizzas.c.id == id).where(pizzas.c.is_view == True)
+        res = conn.execute(sel).fetchone()
+
+        ret = {
+            "id": res[0],
+            "title": res[1],
+            "description": res[2],
+            "photo": res[3],
+            "price_small": res[4],
+            "price_middle": res[5],
+            "price_big": res[6],
+        }
+        return ret
+
+
 def get_pizzas():
     # Берём пиццы из базы и возвращаем пользователю
     sel = select(
@@ -79,6 +116,7 @@ def check_pizzas(pizza):
     else:
         return True
 
+
 def get_pizza_sum(pizza):
     sum = 0
     for i in pizza:
@@ -102,6 +140,7 @@ def get_pizza_sum(pizza):
             sum = sum + (res[1] * i["count"])
 
     return sum
+
 
 def check_drinks(drink):
     if len(drink) != 0:
