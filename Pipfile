@@ -13,7 +13,6 @@ pydantic = {extras = ["email"], version = "*"}
 python-decouple = "*"
 pyjwt = "*"
 pipfile = "*"
-self = "*"
 
 [dev-packages]
 
