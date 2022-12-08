@@ -39,7 +39,7 @@ streets = Table('street', meta,
 
 
 def get_streets():
-    sel = select([streets.c.street]).where(streets.c.is_view == True)
+    sel = select(streets.c.street).where(streets.c.is_view == True)
     res = conn.execute(sel).fetchall()
     result = []
     for i in res:

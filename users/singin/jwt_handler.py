@@ -17,8 +17,9 @@ def getJWT(user_id: str):
     # Функция для генерации токена
     payload = {
         "user_id": user_id,
-        "expires": time.time() + 2592000
+        "expires": time.time() + 1000
     }
+    # 2592000
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
     # refreshtoken = jwt.encode(payload, JWT_REFRESH_SECRET, algorithm=JWT_ALGORITHM)
 

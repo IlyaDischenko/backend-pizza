@@ -62,6 +62,14 @@ def check_discount(promo, number):
         else:
             return {"status": 422}
 
+def decrement_promo_count(promocode):
+    sel_count = select([discount.c.count]).where(discount.c.promocode == promocode)
+    count = conn.execute(sel_count).fetchone()
+
+    ins = discount.update().values(count=count[0] - 1).where(discount.c.promocode == promocode)
+    fin = conn.execute(ins)
+
+
 
 engine = create_engine(db_connect, echo=False, pool_size=6)
 meta.create_all(engine)

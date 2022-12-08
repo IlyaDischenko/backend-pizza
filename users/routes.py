@@ -13,7 +13,7 @@ from users.database_users.model_users import Token, Number, Code, Email, Name, A
 from users.orderAndProduct.models_orderPromo import Promocode, Insert_promocode, Order, GetOrder, BackoutOrder
 from users.orderAndProduct.products import get_pizzas, get_drinks, check_pizzas, check_drinks, get_drink_sum, \
     get_pizza_sum
-from users.orderAndProduct.promo import check_discount, insert_json
+from users.orderAndProduct.promo import check_discount, insert_json, decrement_promo_count
 from users.orderAndProduct.order import get_order, set_order, backout_order
 from users.singin.call import call_service
 from users.singin.jwt_handler import getJWT, middleware, check_refresh
@@ -48,6 +48,9 @@ def confirm_token(data: Code):
     elif not res:
         return {"status": 400}
 
+# @router.post('/api/token/check')
+# def check_access_token(data: Token):
+#     check = middleware(data.token)
 
 @router.post('/api/refreshtoken')
 def refresh_token(data: Token):
@@ -137,11 +140,15 @@ def check_promocode(data: Promocode):
 @router.post("/api/set/order")
 def testPoint(data: Order):
     check = middleware(data.token)
+    time_now = datetime.datetime.now()
+    x = time_now.strftime('%H')
+    if int(x) <= 10 or int(x) >= 24:
+        return {"status": 462}
 
     if check:
         # Не забыть поставить нормальное время при деплое
-        tz_moscow = datetime.timedelta(hours=3)
-        time_now = datetime.datetime.now() + tz_moscow
+        # tz_moscow = datetime.timedelta(hours=3)
+
 
         if check_pizzas(data.pizzas) and check_drinks(data.drinks):
             sum = get_pizza_sum(data.pizzas) + get_drink_sum(data.drinks)
@@ -208,6 +215,10 @@ def testPoint(data: Order):
                       street=data.street, house=data.house, entrance=data.entrance,
                       floor=data.floor, apartment=data.apartment, device=data.device, paytype=data.paytype,
                       price=sum, comment=data.comment, status="accepted", data=time_now.strftime('%Y-%m-%d %H:%M:%S'))
+
+            if len(data.promocode) > 0:
+                decrement_promo_count(data.promocode)
+
             return {"status": 200, "sum": sum, "order_id": res_order}
         else:
             return {"status": 400}
@@ -229,11 +240,26 @@ def get_orders(request: Request, order_id: int):
 
 
 @router.post("/api/set/order/backout")
-def getStreet(data: BackoutOrder):
+def backout(data: BackoutOrder):
     check = middleware(data.token)
     if check is not False:
         user_data = get_user_number(check)
         return backout_order(id=data.order_id, number=user_data)
     else:
         return {"server_status": 400}
+
+@router.get("/api/get/street")
+def get_street():
+    return {"streets": get_streets()}
+
+@router.get("/api/get/time")
+def get_time():
+    time_now = datetime.datetime.now()
+    x = time_now.strftime('%H')
+    z = None
+    if int(x) > 13:
+        z = "больше"
+    else:
+        z = "елсе"
+    return {"time": z}
 
