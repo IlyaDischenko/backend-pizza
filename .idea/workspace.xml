@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d614e0a0-6289-4a14-8717-67fc14626dc0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipfile.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/Cart/CartDB.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/Cart/CartRouter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/database_users/db_users.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/database_users/model_users.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/orderAndProduct/models_orderPromo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/orderAndProduct/order.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/orderAndProduct/products.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/orderAndProduct/promo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/routes.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/singin/call.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/singin/jwt_handler.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2HxXlY9CB3lq9HJgCKWezoPrMlB" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Project.color&quot;: &quot;2c4706&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Project/Python/backend-pizza&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Project\Python\backend-pizza" />
+      <recent name="C:\Project\Python\backend-pizza\users\Cart" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d614e0a0-6289-4a14-8717-67fc14626dc0" name="Changes" comment="" />
+      <created>1669227860030</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1669227860030</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

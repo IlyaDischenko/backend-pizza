@@ -1,4 +1,4 @@
-from admin import routes as adminRouter
+# from admin import routes as adminRouter
 from users import routes as userRouter
 from users.Cart import CartRouter as UserCartRouter
 
@@ -18,7 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # from users.singin.jwt_handler import getJWT, middleware, check_refresh
 
 app = FastAPI()
-app.include_router(adminRouter.router)
+# app.include_router(adminRouter.router)
 app.include_router(userRouter.router)
 app.include_router(UserCartRouter.router)
 
