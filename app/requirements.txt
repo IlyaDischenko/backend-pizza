@@ -4,7 +4,7 @@ python-decouple==3.6
 requests==2.27.1
 SQLAlchemy==1.4.41
 uvicorn
-psycopg2
+psycopg2-binary
 pydantic[email]
 
 

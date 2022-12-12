@@ -2,23 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d614e0a0-6289-4a14-8717-67fc14626dc0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pipfile.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/Cart/CartDB.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/Cart/CartRouter.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/database_users/db_users.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/database_users/model_users.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/orderAndProduct/models_orderPromo.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/orderAndProduct/order.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/orderAndProduct/products.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/orderAndProduct/promo.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/routes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/singin/call.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/singin/jwt_handler.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
