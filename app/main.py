@@ -20,13 +20,15 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 # app.include_router(adminRouter.router)
 app.include_router(userRouter.router)
-app.include_router(UserCartRouter.router)
+# app.include_router(UserCartRouter.router)
 
 origins = [
     "http://localhost:3000",
     "https://frontend-pizza-ehrg.vercel.app",
     "*"
 ]
+
+
 
 app.add_middleware(
     CORSMiddleware,

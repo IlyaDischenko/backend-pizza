@@ -20,6 +20,10 @@ from users.singin.jwt_handler import getJWT, middleware, check_refresh
 
 router = APIRouter()
 
+@router.get("/")
+def null_req():
+    return {"its": "ok"}
+
 
 @router.get("/get/all")
 def get_pizza():
