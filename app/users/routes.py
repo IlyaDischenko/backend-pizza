@@ -145,15 +145,13 @@ def check_promocode(data: Promocode):
 def testPoint(data: Order):
     check = middleware(data.token)
     time_now = datetime.datetime.now()
-    x = time_now.strftime('%H')
+    tz_moscow = datetime.timedelta(hours=3)
+    fin_time = time_now + tz_moscow
+    x = fin_time.strftime('%H')
     if int(x) <= 10 or int(x) >= 24:
         return {"status": 462}
 
     if check:
-        # Не забыть поставить нормальное время при деплое
-        # tz_moscow = datetime.timedelta(hours=3)
-
-
         if check_pizzas(data.pizzas) and check_drinks(data.drinks):
             sum = get_pizza_sum(data.pizzas) + get_drink_sum(data.drinks)
 
