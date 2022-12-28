@@ -1,18 +1,6 @@
 version: "3.9"
 
 services:
-  db:
-    container_name: db
-    environment:
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_USER=admin
-    image: postgres:13.9-alpine3.17
-    networks:
-      - app-network
-    ports:
-      - "5438:5432"
-
-
   fastapi:
     build: ./app
     depends_on:
@@ -20,42 +8,13 @@ services:
     command: uvicorn main:app --reload --host 0.0.0.0
     volumes:
       - ./app:/app
-    expose:
-      - 8000
-
+    ports:
+      - "8001:8000"
+    restart: always
     links:
       - db
     networks:
       - app-network
-
-  
-  nginx:
-    image: nginx:1.19.8-alpine
-    depends_on:
-      - fastapi
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx-conf.d:/etc/nginx/conf.d
-      - etc-letsencrypt:/etc/letsencrypt
-    networks:
-      - app-network
-
-
-  # certbot:
-  #   image: certbot/certbot
-  #   depends_on:
-  #     - nginx
-  #   container_name: certbot
-  #   restart: unless-stopped
-  #   volumes:
-  #     - etc-letsencrypt:/etc/letsencrypt
-  #     - www-html:/var/www/html
-  #   entrypoint: certonly --webroot --webroot-path=/var/www/html --email 13spp13@mail.ru --agree-tos --no-eff-email --staging -d poskoreev.online
-
-volumes:
- www-html:
- etc-letsencrypt:
 
 
 networks:
