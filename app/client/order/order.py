@@ -4,8 +4,8 @@ import datetime
 from decouple import config
 from sqlalchemy import create_engine, select, Table, Column, Integer, String, MetaData, insert, update, Boolean, \
     DateTime
-from users.orderAndProduct.products import pizzas as Ppizzas
-from users.orderAndProduct.products import drinks as Pdrinks
+from client.orderAndProduct.products import pizzas as Ppizzas
+from client.orderAndProduct.products import drinks as Pdrinks
 
 db_connect = config('database-connect-addres')
 meta = MetaData()

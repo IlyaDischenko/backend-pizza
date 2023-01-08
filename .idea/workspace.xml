@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="d614e0a0-6289-4a14-8717-67fc14626dc0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/users/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/users/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/app/Pipfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Pipfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/app/Pipfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/.env" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/Cart/CartDB.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/Cart/CartDB.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/Cart/CartRouter.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/Cart/CartRouter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/database_users/db_users.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/users/db_users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/database_users/model_users.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/users/model_users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/orderAndProduct/models_orderPromo.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/orderAndProduct/models_orderPromo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/orderAndProduct/order.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/orderAndProduct/order.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/orderAndProduct/products.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/orderAndProduct/products.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/orderAndProduct/promo.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/orderAndProduct/promo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/singin/call.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/singin/call.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/users/singin/jwt_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/client/singin/jwt_handler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,9 +42,9 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/.gitignore" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/app/Pipfile" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/app/client/.env" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/app/client/routes.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/app/main.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/app/users/.env" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/app/users/routes.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/docker-compose.yml" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -40,14 +58,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Project.color&quot;: &quot;2c4706&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Практические Дищенко&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Project.color": "2c4706",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "D:/backend-pizza/app"
   }
-}</component>
+}]]></component>
   <component name="ReadonlyStatusHandler">
     <option name="SHOW_DIALOG" value="false" />
   </component>

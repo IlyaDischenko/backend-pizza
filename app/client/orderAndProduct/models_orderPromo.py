@@ -12,7 +12,7 @@ class Insert_promocode(BaseModel):
     promocode: str = Field(default=None)
     count: int = Field(default=None)
     type: int = Field(default=None)
-    return_data: object = Field(default=None)
+    discount_data: int = Field(default=None)
     min_sum: int = Field(default=None)
     need_number: bool = Field()
     number: str = Field(default=None)

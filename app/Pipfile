@@ -4,15 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-fastapi = "*"
+fastapi = "==0.85.0"
 uvicorn = "*"
-sqlalchemy = "*"
-requests = "*"
+sqlalchemy = "==1.4.41"
+requests = "==2.27.1"
 psycopg2 = "*"
+python-decouple = "==3.6"
+pyjwt = "==2.4.0"
+psycopg2-binary = "*"
 pydantic = {extras = ["email"], version = "*"}
-python-decouple = "*"
-pyjwt = "*"
-
+pymongo = "*"
 
 [dev-packages]
 

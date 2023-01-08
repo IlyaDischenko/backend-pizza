@@ -1,6 +1,6 @@
 import requests
 
-from users.database_users.db_users import insert_code
+from client.users.db_users_mongo import insert_code
 
 
 def call_service(number):
@@ -9,7 +9,7 @@ def call_service(number):
         "service_id": 424,
         "secret_key": "37c2954f1b3ae5c7fad812280f10795e",
         "phone": number,
-        "test": 0
+        "test": 1
     }
 
     resp = requests.get('https://api.nerotech.ru/api/v1/call', params=payload).json()
