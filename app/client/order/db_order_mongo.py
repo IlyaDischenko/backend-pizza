@@ -127,7 +127,6 @@ def add_pizza(item_id, id=None):
 
     # Если пиццы нет, то добавляю ее
     if not exists:
-
         obj["pizza"]["items"].append({
             "id": item_id,
             "title": pizza["title"],
@@ -141,32 +140,69 @@ def add_pizza(item_id, id=None):
 
     res_math = math(obj)
 
-    # print(res_math["promo"])
 
     order_collection.update_one({"_id": ObjectId(str(obj["_id"]))}, {"$set": {"order_id": str(obj["_id"]),
                                                                               "pizza": obj["pizza"],
                                                                               "promo": res_math["promo"],
-                                                                              "total_sum_without_promo": res_math["total_sum_without_promo"],
+                                                                              "total_sum_without_promo": res_math[
+                                                                                  "total_sum_without_promo"],
+                                                                              "total_sum_with_promo": res_math[
+                                                                                  "total_sum_with_promo"],
                                                                               "count_items": res_math["count_items"]}})
 
     return order_collection.find_one({"_id": ObjectId(str(obj["_id"]))}, {'_id': False})
 
 
 def math(obj):
-    total_sum_without_promo = int(obj["pizza"]["total_pizza"]) + int(obj["drink"]["total_drink"]) + int(obj["dessert"]["total_dessert"])
-    count_items = int(obj["pizza"]["count_pizza"]) + int(obj["drink"]["count_drink"]) + int(obj["dessert"]["count_dessert"])
+    obj["total_sum_without_promo"] = int(obj["pizza"]["total_pizza"]) + int(obj["drink"]["total_drink"]) + int(
+        obj["dessert"]["total_dessert"])
+    obj["count_items"] = int(obj["pizza"]["count_pizza"]) + int(obj["drink"]["count_drink"]) + int(
+        obj["dessert"]["count_dessert"])
 
-
-    if len(obj["promo"]["promocode"]) == 0:
+    if not obj["promo"]["promocode_take"]:
         return {
             "promo": obj["promo"],
-            "total_sum_without_promo": total_sum_without_promo,
-            "count_items": count_items
+            "total_sum_without_promo": obj["total_sum_without_promo"],
+            "total_sum_with_promo": obj["total_sum_without_promo"],
+            "count_items": obj["count_items"]
         }
     else:
+
+        if obj["count_items"] <= 0:
+            # Если в корзине не было элементов до этого
+            obj["promo"]["promocode_applied"] = False
+            obj["promo"]["promocode_message"] = "Промокод применён, добавьте товар"
+
+            obj["total_sum_with_promo"] = obj["total_sum_without_promo"]
+        else:
+            # Если в корзине были элементы
+            c_sum = int(obj["total_sum_without_promo"])
+            c_min_sum = int(obj["promo"]["promocode_min_sum"])
+            c_max_sum = int(obj["promo"]["promocode_max_sum"])
+
+            if c_min_sum <= c_sum <= c_max_sum:
+                # Если сумма заказа в допустимой норме минимальной и максимальной суммы промокода
+                obj["promo"]["promocode_applied"] = True
+                obj["promo"]["promocode_message"] = "Промокод применён"
+
+                if obj["promo"]["promocode_type"] == "percent":
+                    # Если промокод вычитает проценты
+                    obj["total_sum_with_promo"] = int(
+                        (float(obj["total_sum_without_promo"]) / 100) * (100 - int(obj["promo"]["promocode_effect"])))
+                elif obj["promo"]["promocode_type"] == "sum":
+                    # Если промокод отнимает сумму
+                    obj["total_sum_with_promo"] = int(obj["total_sum_without_promo"]) - int(
+                        obj["promo"]["promocode_effect"])
+            else:
+                # Если минимальная или максимальная сумма заказа не подходит
+                obj["promo"]["promocode_applied"] = False
+                obj["promo"]["promocode_message"] = f"Минимальная сумма заказа {c_min_sum}"
+
+                obj["total_sum_with_promo"] = obj["total_sum_without_promo"]
+
         return {
-                # пересчитать!!
-                "promo": obj["promo"],
-                "total_sum_without_promo": total_sum_without_promo,
-                "count_items": count_items
-                }
+            "promo": obj["promo"],
+            "total_sum_without_promo": obj["total_sum_without_promo"],
+            "total_sum_with_promo": obj["total_sum_with_promo"],
+            "count_items": obj["count_items"]
+        }
