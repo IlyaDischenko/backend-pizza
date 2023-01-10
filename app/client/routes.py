@@ -4,7 +4,6 @@ from fastapi import APIRouter
 #     update_last_active
 
 from client.users.db_users_mongo import get_streets, check_code, exists_user_or_add, add_email, add_name, get_profile_info
-from client.orderAndProduct.db_promo_mongo import check_discount
 from client.orderAndProduct.db_products_mongo import get_all_product
 
 from client.users.model_users import Token, Number, Code, Email, Name
@@ -145,9 +144,7 @@ def set_name(data: Name):
 
 
 
-@router.post("/api/check/promocode")
-def check_promocode(data: Promocode):
-    return check_discount(promo=data.promocode, number=data.number)
+
 #
 #
 # @router.post("/api/set/order")

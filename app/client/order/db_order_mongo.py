@@ -3,6 +3,8 @@ from bson.objectid import ObjectId
 import pymongo
 from decouple import config
 
+# from client.orderAndProduct.db_promo_mongo import get_promocode
+
 mongo_addres = config('mongo-db-addres')
 
 db_client = pymongo.MongoClient(mongo_addres)
@@ -17,7 +19,7 @@ order_collection = db['orders']
 def check_order_by_id(id):
     # Функция либо вернёт объект заказа, либо создаст его и вернёт
 
-    if len(id) == 0:
+    if len(id) == 0 or len(id) < 24:
         check = None
     else:
         check = order_collection.find_one({"_id": ObjectId(id)})
@@ -32,6 +34,7 @@ def set_null_order():
     # Функция создаст пустой ордер
 
     null_order = {
+        "order_id": "",
         "number": "",
         "pizza": {
             "items": [],
@@ -52,15 +55,21 @@ def set_null_order():
         "is_login": False,
         "can_order": False,
         "cant_order_message": "",
+        "points": {
+            "points_for_order": 0,
+            "item_for_points": {},
+            "item_for_points_price": 0,
+            "use_item_for_points": False
+        },
         "total_sum_without_promo": 0,
         "total_sum_with_promo": 0,
         "count_items": 0,
         "datetime": datetime.datetime.now(),
         "promo": {
             "promocode": "",
-            "promocode_accepted": False,
+            "promocode_take": False,
+            "promocode_applied": False,
             "promocode_message": "",
-            "promocode_status": "",
             "promocode_type": "",
             "promocode_effect": "",
             "promocode_min_sum": "",
@@ -77,7 +86,7 @@ def set_null_order():
         "comment": "",
         "device": "",
         "paytype": "",
-        "status": ""
+        "status": "initial"
     }
     return order_collection.find_one({"_id": ObjectId(str(order_collection.insert_one(null_order).inserted_id))})
 
@@ -89,13 +98,14 @@ def add_pizza(item_id, id=None):
 
     exists = False
     pizza_item_price = None
+    # item_points =
 
     # Если такой пиццы нет в базе, то возвращаем исходный объект
     if pizza is None:
         return obj
 
     # Записываю в переменную цену за пиццу согласно размеру
-    if item_id[-2:] == "27":
+    if item_id[-2:] == "26":
         pizza_item_price = int(pizza["price_small"])
     if item_id[-2:] == "30":
         pizza_item_price = int(pizza["price_middle"])
@@ -110,12 +120,14 @@ def add_pizza(item_id, id=None):
 
             obj["pizza"]["count_pizza"] = str(int(obj["pizza"]["count_pizza"]) + 1)
             obj["pizza"]["total_pizza"] = str(int(obj["pizza"]["total_pizza"]) + pizza_item_price)
+            # obj["pizza"]["total_points"] = str(int(obj["pizza"]["total_points"]) + item_points)
 
             exists = True
             break
 
     # Если пиццы нет, то добавляю ее
     if not exists:
+
         obj["pizza"]["items"].append({
             "id": item_id,
             "title": pizza["title"],
@@ -127,8 +139,34 @@ def add_pizza(item_id, id=None):
         obj["pizza"]["count_pizza"] = str(int(obj["pizza"]["count_pizza"]) + 1)
         obj["pizza"]["total_pizza"] = str(int(obj["pizza"]["total_pizza"]) + pizza_item_price)
 
-    order_collection.update_one({"_id": ObjectId(str(obj["_id"]))}, {"$set": {"pizza": obj["pizza"]}})
+    res_math = math(obj)
 
-    xy = order_collection.find_one({"_id": ObjectId(str(obj["_id"]))}, {'_id': False})
+    # print(res_math["promo"])
 
-    return xy
+    order_collection.update_one({"_id": ObjectId(str(obj["_id"]))}, {"$set": {"order_id": str(obj["_id"]),
+                                                                              "pizza": obj["pizza"],
+                                                                              "promo": res_math["promo"],
+                                                                              "total_sum_without_promo": res_math["total_sum_without_promo"],
+                                                                              "count_items": res_math["count_items"]}})
+
+    return order_collection.find_one({"_id": ObjectId(str(obj["_id"]))}, {'_id': False})
+
+
+def math(obj):
+    total_sum_without_promo = int(obj["pizza"]["total_pizza"]) + int(obj["drink"]["total_drink"]) + int(obj["dessert"]["total_dessert"])
+    count_items = int(obj["pizza"]["count_pizza"]) + int(obj["drink"]["count_drink"]) + int(obj["dessert"]["count_dessert"])
+
+
+    if len(obj["promo"]["promocode"]) == 0:
+        return {
+            "promo": obj["promo"],
+            "total_sum_without_promo": total_sum_without_promo,
+            "count_items": count_items
+        }
+    else:
+        return {
+                # пересчитать!!
+                "promo": obj["promo"],
+                "total_sum_without_promo": total_sum_without_promo,
+                "count_items": count_items
+                }
