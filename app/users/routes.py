@@ -172,7 +172,7 @@ async def send_to_bot(pizzas):
 async def testPoint(data: Order):
     check = middleware(data.token)
     time_now = datetime.datetime.now()
-    tz_moscow = datetime.timedelta(hours=0)
+    tz_moscow = datetime.timedelta(hours=3)
     fin_time = time_now + tz_moscow
     print(fin_time)
     x = fin_time.strftime('%H')
@@ -293,9 +293,6 @@ async def get_orders(request: Request, order_id: int):
     if check is not False:
 
         user_data = get_user_number(check)
-        await bot.send_message(chat_id=CHANEL_ID,
-                               text=f"Номер: {user_data}\nЗАКАЗ ОТМЕНЁН!")
-
         return {"server_status": 200, "order_info": get_order(id=order_id, number=user_data)}
     else:
         return {"server_status": 400}
@@ -306,6 +303,9 @@ def backout(data: BackoutOrder):
     check = middleware(data.token)
     if check is not False:
         user_data = get_user_number(check)
+
+        await bot.send_message(chat_id=CHANEL_ID,
+                               text=f"Номер: {user_data}\nЗАКАЗ ОТМЕНЁН!")
         return backout_order(id=data.order_id, number=user_data)
     else:
         return {"server_status": 400}
