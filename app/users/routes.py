@@ -30,7 +30,6 @@ router = APIRouter()
 
 @router.get("/")
 async def null_req():
-    await bot.send_message(chat_id=CHANEL_ID, text="Привет, долбоёб\n ауе")
     return {"its": "ok"}
 
 
