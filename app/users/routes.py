@@ -273,7 +273,7 @@ async def testPoint(data: Order):
                 type_pay = "Перевод на карту"
 
             await bot.send_message(chat_id=CHANEL_ID,
-                                   text=f"Пиццы: \n\n{bot_pizzas}\n\nНапитки: \n\n{bot_drinks}\n\nПо акции: {bot_discount}\n\nАдрес: {data.street}, {data.house} дом, {data.entrance} подъезд, {data.floor} этаж, {data.apartment} кв\n\nКомментарий: {data.comment}\n\nОплата: {type_pay}\nСумма: {sum}")
+                                   text=f"Номер: {user_data}\nПиццы: \n\n{bot_pizzas}\n\nНапитки: \n\n{bot_drinks}\n\nПо акции: {bot_discount}\n\nАдрес: {data.street}, {data.house} дом, {data.entrance} подъезд, {data.floor} этаж, {data.apartment} кв\n\nКомментарий: {data.comment}\n\nОплата: {type_pay}\nСумма: {sum}")
 
             if len(data.promocode) > 0:
                 decrement_promo_count(data.promocode)
@@ -289,11 +289,14 @@ async def testPoint(data: Order):
 
 
 @router.get("/api/get/order/{order_id}")
-def get_orders(request: Request, order_id: int):
+async def get_orders(request: Request, order_id: int):
     check = middleware(request.headers.get('authorization'))
     if check is not False:
 
         user_data = get_user_number(check)
+        await bot.send_message(chat_id=CHANEL_ID,
+                               text=f"Номер: {user_data}\nЗАКАЗ ОТМЕНЁН!")
+
         return {"server_status": 200, "order_info": get_order(id=order_id, number=user_data)}
     else:
         return {"server_status": 400}
