@@ -4,7 +4,6 @@ import json
 from fastapi import Request
 from fastapi import APIRouter
 
-
 from users.orderAndProduct.products import get_pizzas, get_drinks, check_pizzas, check_drinks, get_drink_sum, \
     get_pizza_sum
 from users.database_users.db_users import check_code, exists_user_or_add, add_email, add_name, add_address, \
@@ -18,10 +17,20 @@ from users.orderAndProduct.order import get_order, set_order, backout_order
 from users.singin.call import call_service
 from users.singin.jwt_handler import getJWT, middleware, check_refresh
 
+from aiogram import Bot, Dispatcher, executor, types
+
+TOKEN = "5982958919:AAGblpqmom5N1OwbAsA8J6QN1WyO1VMarOo"
+CHANEL_ID = "-1001860241017"
+
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
+
 router = APIRouter()
 
+
 @router.get("/")
-def null_req():
+async def null_req():
+    await bot.send_message(chat_id=CHANEL_ID, text="Привет, долбоёб\n ауе")
     return {"its": "ok"}
 
 
@@ -31,6 +40,7 @@ def get_pizza():
     res_drinks = get_drinks()
     return {"pizza": res_pizzas,
             "drinks": res_drinks}
+
 
 @router.post("/api/get/token")
 def get_token(num: Number):
@@ -51,6 +61,7 @@ def confirm_token(data: Code):
         }
     elif not res:
         return {"status": 400}
+
 
 # @router.post('/api/token/check')
 # def check_access_token(data: Token):
@@ -121,6 +132,7 @@ def set_name(data: Name):
     elif check == False:
         return {"status": 401}
 
+
 @router.post("/api/set/address")
 def set_address(data: Address):
     try:
@@ -141,17 +153,37 @@ def check_promocode(data: Promocode):
     return check_discount(promo=data.promocode, number=data.number)
 
 
-@router.post("/api/set/order")
-def testPoint(data: Order):
-    check = middleware(data.token)
+@router.get("/api/get/time")
+def gettime():
     time_now = datetime.datetime.now()
     tz_moscow = datetime.timedelta(hours=3)
+    allt = time_now + tz_moscow
+    return {
+        "time_now": time_now,
+        "tz_moscow": tz_moscow,
+        "allt": allt,
+    }
+
+
+async def send_to_bot(pizzas):
+    await bot.send_message(chat_id=CHANEL_ID, text=f"<b>Пиццы</b> {pizzas}\n ауе")
+
+
+@router.post("/api/set/order")
+async def testPoint(data: Order):
+    check = middleware(data.token)
+    time_now = datetime.datetime.now()
+    tz_moscow = datetime.timedelta(hours=0)
     fin_time = time_now + tz_moscow
+    print(fin_time)
     x = fin_time.strftime('%H')
     if int(x) <= 10 or int(x) >= 24:
         return {"status": 462}
 
     if check:
+        # Не забыть поставить нормальное время при деплое
+        # tz_moscow = datetime.timedelta(hours=3)
+
         if check_pizzas(data.pizzas) and check_drinks(data.drinks):
             sum = get_pizza_sum(data.pizzas) + get_drink_sum(data.drinks)
 
@@ -213,10 +245,35 @@ def testPoint(data: Order):
                     return {"status": 452}
 
             res_order = set_order(user=user_data, pizzas=dpizzas, drinks=ddrinks, promocode=data.promocode,
-                      promocode_item=discount_data,
-                      street=data.street, house=data.house, entrance=data.entrance,
-                      floor=data.floor, apartment=data.apartment, device=data.device, paytype=data.paytype,
-                      price=sum, comment=data.comment, status="accepted", data=time_now.strftime('%Y-%m-%d %H:%M:%S'))
+                                  promocode_item=discount_data,
+                                  street=data.street, house=data.house, entrance=data.entrance,
+                                  floor=data.floor, apartment=data.apartment, device=data.device, paytype=data.paytype,
+                                  price=sum, comment=data.comment, status="accepted",
+                                  data=fin_time.strftime('%Y-%m-%d %H:%M:%S'))
+
+            bot_pizzas = ""
+            x = data.pizzas
+            for i in x:
+                bot_pizzas += f"{i['title']}, {i['size']}см, {i['count']}шт\n"
+
+            y = data.drinks
+            bot_drinks = ""
+            for i in y:
+                bot_drinks += f"{i['title']}, {i['count']}шт \n"
+
+            z = discount_data
+            bot_discount = ""
+            if z != None:
+                for i in z:
+                    bot_discount += f"{i['title']}"
+
+            if data.paytype == "cash":
+                type_pay = "Наличные"
+            if data.paytype == "sendtocart":
+                type_pay = "Перевод на карту"
+
+            await bot.send_message(chat_id=CHANEL_ID,
+                                   text=f"Пиццы: \n\n{bot_pizzas}\n\nНапитки: \n\n{bot_drinks}\n\nПо акции: {bot_discount}\n\nАдрес: {data.street}, {data.house} дом, {data.entrance} подъезд, {data.floor} этаж, {data.apartment} кв\n\nКомментарий: {data.comment}\n\nОплата: {type_pay}\nСумма: {sum}")
 
             if len(data.promocode) > 0:
                 decrement_promo_count(data.promocode)
@@ -229,6 +286,7 @@ def testPoint(data: Order):
             "status": 401,
             "error": "Not valid access token"
         }
+
 
 @router.get("/api/get/order/{order_id}")
 def get_orders(request: Request, order_id: int):
@@ -250,18 +308,7 @@ def backout(data: BackoutOrder):
     else:
         return {"server_status": 400}
 
+
 @router.get("/api/get/street")
 def get_street():
     return {"streets": get_streets()}
-
-@router.get("/api/get/time")
-def get_time():
-    time_now = datetime.datetime.now()
-    x = time_now.strftime('%H')
-    z = None
-    if int(x) > 13:
-        z = "больше"
-    else:
-        z = "елсе"
-    return {"time": z}
-

@@ -12,7 +12,7 @@ psycopg2 = "*"
 pydantic = {extras = ["email"], version = "*"}
 python-decouple = "*"
 pyjwt = "*"
-
+aiogram = "*"
 
 [dev-packages]
 
